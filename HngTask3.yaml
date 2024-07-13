@@ -1,0 +1,1086 @@
+openapi: 3.0.1
+info:
+  title: API Documentation
+  description: Hng task3.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+security:
+  - bearerAuth: []
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /logout:
+    post:
+      summary: User logout
+      responses:
+        '200':
+          description: Successfully logged out
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /password/forgot:
+    post:
+      summary: Send password reset link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: Password reset link sent
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /password/reset:
+    post:
+      summary: Reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password successfully reset
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /magic-link:
+    post:
+      summary: Send magic link for login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MagicLinkRequest'
+      responses:
+        '200':
+          description: Magic link sent
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /auth/social:
+    post:
+      summary: Social login (Google, Facebook, etc.)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialLoginRequest'
+      responses:
+        '200':
+          description: Successfully logged in via social login
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /password/change:
+    post:
+      summary: Change password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Password successfully changed
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /auth/me:
+    get:
+      summary: Get authenticated user details
+      responses:
+        '200':
+          description: Authenticated user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /email/templates:
+    get:
+      summary: Get all email templates
+      responses:
+        '200':
+          description: A list of email templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmailTemplate'
+        '500':
+          description: Internal Server Error
+    post:
+      summary: Create a new email template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplate'
+      responses:
+        '201':
+          description: Email template created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /email/templates/{id}:
+    put:
+      summary: Update an email template
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplate'
+      responses:
+        '200':
+          description: Email template updated
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    delete:
+      summary: Delete an email template
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Email template deleted
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /payments/stripe:
+    post:
+      summary: Create a Stripe payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Stripe payment created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /payments/flutterwave:
+    post:
+      summary: Create a Flutterwave payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Flutterwave payment created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /payments/lemonsqueezy:
+    post:
+      summary: Create a LemonSqueezy payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: LemonSqueezy payment created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+       
+  /payments/initialize:
+    post:
+      summary: Initialize a payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                currency:
+                  type: string
+                provider:
+                  type: string
+      responses:
+        '200':
+          description: Payment initialized
+        '400':
+          description: Invalid input data
+  /payments/verify:
+    get:
+      summary: Verify a payment
+      parameters:
+        - name: transaction_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment verified
+        '400':
+          description: Invalid transaction ID
+  /payments/history:
+    get:
+      summary: Get payment history
+      responses:
+        '200':
+          description: Payment history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal Server Error
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /users/{id}:
+    get:
+      summary: Get user details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    put:
+      summary: Update user details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    delete:
+      summary: Delete a user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /organisations:
+    get:
+      summary: Get all organisations
+      responses:
+        '200':
+          description: A list of organisations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organisation'
+        '500':
+          description: Internal Server Error
+    post:
+      summary: Create a new organisation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organisation'
+      responses:
+        '201':
+          description: Organisation created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /organisations/{id}:
+    get:
+      summary: Get organisation details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Organisation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    put:
+      summary: Update organisation details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organisation'
+      responses:
+        '200':
+          description: Organisation updated
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    delete:
+      summary: Delete an organisation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Organisation deleted
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /superadmin/users:
+    get:
+      summary: Get all users (superadmin view)
+      responses:
+        '200':
+          description: A list of users (superadmin view)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /superadmin/organisations:
+    get:
+      summary: Get all organisations (superadmin view)
+      responses:
+        '200':
+          description: A list of organisations (superadmin view)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organisation'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /superadmin/payments:
+    get:
+      summary: Get all payments (superadmin view)
+      responses:
+        '200':
+          description: A list of payments (superadmin view)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  
+  /superadmin/activity-log:
+    get:
+      summary: Get activity log
+      responses:
+        '200':
+          description: Activity log
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /invite:
+    post:
+      summary: Generate an invite link
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Invite link generated
+        '400':
+          description: Invalid input data    
+  /notifications/push:
+    post:
+      summary: Send a push notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Notification sent
+        '400':
+          description: Invalid input data
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    RegisterRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        gender:
+          type: string
+        nationality:
+          type: string
+        state:
+          type: string
+        address:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    ResetPasswordRequest:
+      type: object
+      properties:
+        token:
+          type: string
+        new_password:
+          type: string
+    MagicLinkRequest:
+      type: object
+      properties:
+        email:
+          type: string
+    SocialLoginRequest:
+      type: object
+      properties:
+        provider:
+          type: string
+        token:
+          type: string
+    ChangePasswordRequest:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        gender:
+          type: string
+        nationality:
+          type: string
+        state:
+          type: string
+        address:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    EmailTemplate:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PaymentRequest:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        payment_method:
+          type: string
+    Payment:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        payment_method:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Organisation:
+      type: object
+      properties:
+        id:
+          type: integer
+        orgId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        action:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Users:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        gender:
+          type: string
+        nationality:
+          type: string
+        state:
+          type: string
+        address:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Organizations:
+      type: object
+      properties:
+        id:
+          type: integer
+        orgId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    UserOrganizations:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        organization_id:
+          type: integer
+    RefreshTokens:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        token:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+    Messages:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        subject:
+          type: string
+        body:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Templates:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Payments:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        payment_method:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Settings:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        setting_type:
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Pages:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        slug:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Activities:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        action:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    Invites:
+      type: object
+      properties:
+        id:
+          type: integer
+        inviter_id:
+          type: integer
+        invitee_email:
+          type: string
+        token:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Notifications:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        message:
+          type: string
+        read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    Blogs:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        author_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Charts:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        data:
+          type: object
+        type:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    MetaData:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        data:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+    Languages:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+    Regions:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+    EmailTemplates:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
